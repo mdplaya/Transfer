@@ -1,789 +1,3187 @@
 <!DOCTYPE html>
+
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>CVS Health - AI & Automation Transformation</title>
+
     <style>
+
         * {
+
             margin: 0;
+
             padding: 0;
+
             box-sizing: border-box;
+
         }
+
+ 
 
         body {
+
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+
             overflow: hidden;
+
             background: #1a1a1a;
+
             color: #333;
+
         }
+
+ 
 
         .presentation-container {
+
             position: relative;
+
             width: 100vw;
+
             height: 100vh;
+
             display: flex;
+
             align-items: center;
+
             justify-content: center;
+
         }
+
+ 
 
         .slide {
+
             position: absolute;
+
             width: 90%;
+
             max-width: 1200px;
+
             height: 90%;
+
             background: white;
+
             border-radius: 12px;
+
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+
             padding: 60px;
+
             display: none;
+
             opacity: 0;
+
             transform: translateX(100px);
+
             transition: all 0.5s ease;
+
         }
+
+ 
 
         .slide.active {
+
             display: flex;
+
             flex-direction: column;
+
             opacity: 1;
+
             transform: translateX(0);
+
         }
+
+ 
 
         .slide-header {
+
             margin-bottom: 40px;
+
         }
+
+ 
 
         .slide h1 {
+
             font-size: 48px;
+
             color: #667eea;
+
             margin-bottom: 20px;
+
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+
             -webkit-background-clip: text;
+
             -webkit-text-fill-color: transparent;
+
         }
+
+ 
 
         .slide h2 {
+
             font-size: 36px;
+
             color: #333;
+
             margin-bottom: 30px;
+
         }
+
+ 
 
         .slide h3 {
+
             font-size: 24px;
+
             color: #555;
+
             margin-bottom: 20px;
+
         }
+
+ 
 
         .controls {
+
             position: fixed;
+
             bottom: 30px;
+
             left: 50%;
+
             transform: translateX(-50%);
+
             display: flex;
+
             gap: 20px;
+
             z-index: 100;
+
         }
+
+ 
 
         .btn {
+
             padding: 12px 24px;
+
             background: #667eea;
+
             color: white;
+
             border: none;
+
             border-radius: 25px;
+
             cursor: pointer;
+
             font-size: 16px;
+
             transition: all 0.3s ease;
+
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+
         }
+
+ 
 
         .btn:hover {
+
             background: #764ba2;
+
             transform: translateY(-2px);
+
         }
+
+ 
 
         .btn:disabled {
+
             opacity: 0.5;
+
             cursor: not-allowed;
+
         }
+
+ 
 
         .slide-number {
+
             position: fixed;
+
             top: 30px;
+
             right: 30px;
+
             color: white;
+
             background: rgba(102, 126, 234, 0.8);
+
             padding: 10px 20px;
+
             border-radius: 20px;
+
             font-size: 14px;
+
         }
+
+ 
 
         /* Title Slide Styles */
+
         .title-slide {
+
             text-align: center;
+
             justify-content: center;
+
             background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+
         }
+
+ 
 
         .title-slide h1 {
+
             font-size: 56px;
+
             margin-bottom: 30px;
+
         }
+
+ 
 
         .title-slide p {
+
             font-size: 24px;
+
             color: #666;
+
             margin-bottom: 15px;
+
         }
+
+ 
 
         .title-slide .date {
+
             font-size: 20px;
+
             color: #888;
+
             margin-top: 30px;
+
         }
+
+ 
 
         /* Content Layout Styles */
+
         .two-column {
+
             display: grid;
+
             grid-template-columns: 1fr 1fr;
+
             gap: 40px;
+
             height: 100%;
+
         }
+
+ 
 
         .column {
+
             display: flex;
+
             flex-direction: column;
+
         }
+
+ 
 
         .column-header {
+
             font-size: 28px;
+
             font-weight: bold;
+
             margin-bottom: 20px;
+
             padding: 15px;
+
             border-radius: 8px;
+
             text-align: center;
+
         }
+
+ 
 
         .problems .column-header {
+
             background: #fee;
+
             color: #e53e3e;
+
         }
+
+ 
 
         .solutions .column-header {
+
             background: #f0fdf4;
+
             color: #48bb78;
+
         }
+
+ 
 
         .card {
+
             background: #f8f9fa;
+
             padding: 20px;
+
             border-radius: 12px;
+
             margin-bottom: 20px;
+
             border-left: 4px solid;
+
         }
+
+ 
 
         .problems .card {
+
             border-color: #e53e3e;
+
         }
+
+ 
 
         .solutions .card {
+
             border-color: #48bb78;
+
         }
+
+ 
 
         .card ul {
+
             list-style: none;
+
             padding: 0;
+
         }
+
+ 
 
         .card li {
+
             padding: 8px 0;
+
             padding-left: 30px;
+
             position: relative;
+
             line-height: 1.6;
+
         }
+
+ 
 
         .problems .card li:before {
+
             content: "⚠️";
+
             position: absolute;
+
             left: 0;
+
         }
+
+ 
 
         .solutions .card li:before {
+
             content: "✅";
+
             position: absolute;
+
             left: 0;
+
         }
+
+ 
 
         .highlight {
+
             background: #fef3c7;
+
             padding: 2px 8px;
+
             border-radius: 4px;
+
             font-weight: bold;
+
         }
+
+ 
 
         /* Achievement Slide Styles */
+
         .achievement-slide {
+
             text-align: center;
+
             justify-content: center;
+
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+
             color: white;
+
         }
+
+ 
 
         .achievement-slide h2 {
+
             color: white;
+
             font-size: 48px;
+
             margin-bottom: 40px;
+
         }
+
+ 
 
         .metrics-grid {
+
             display: grid;
+
             grid-template-columns: repeat(2, 1fr);
+
             gap: 30px;
+
             margin-top: 40px;
+
         }
+
+ 
 
         .metric-card {
+
             background: rgba(255, 255, 255, 0.1);
+
             padding: 30px;
+
             border-radius: 12px;
+
             backdrop-filter: blur(10px);
+
         }
+
+ 
 
         .metric-value {
+
             font-size: 36px;
+
             font-weight: bold;
+
             margin-bottom: 10px;
+
         }
+
+ 
 
         .metric-label {
+
             font-size: 18px;
+
             opacity: 0.9;
+
         }
+
+ 
 
         /* Timeline Indicator */
+
         .timeline-indicator {
+
             position: absolute;
+
             top: 20px;
+
             left: 50%;
+
             transform: translateX(-50%);
+
             display: flex;
+
             gap: 10px;
+
         }
+
+ 
 
         .timeline-dot {
+
             width: 12px;
+
             height: 12px;
+
             border-radius: 50%;
+
             background: #ddd;
+
             transition: all 0.3s ease;
+
         }
+
+ 
 
         .timeline-dot.active {
+
             background: #667eea;
+
             transform: scale(1.5);
+
         }
+
+ 
 
         /* Responsive Design */
+
         @media (max-width: 768px) {
+
             .slide {
+
                 padding: 30px;
+
             }
-            
+
+ 
+
             .slide h1 {
+
                 font-size: 32px;
+
             }
-            
+
+ 
+
             .slide h2 {
+
                 font-size: 24px;
+
             }
-            
+
+ 
+
             .two-column {
+
                 grid-template-columns: 1fr;
+
             }
-            
+
+ 
+
             .controls {
+
                 bottom: 20px;
+
             }
+
         }
+
+ 
 
         /* Next Steps Slide */
+
         .roadmap-grid {
+
             display: grid;
+
             grid-template-columns: repeat(2, 1fr);
+
             gap: 30px;
+
             margin-top: 30px;
+
         }
+
+ 
 
         .roadmap-section {
+
             background: #f8f9fa;
+
             padding: 25px;
+
             border-radius: 12px;
+
             border-top: 4px solid #667eea;
+
         }
+
+ 
 
         .roadmap-section h4 {
+
             color: #667eea;
+
             margin-bottom: 15px;
+
             font-size: 20px;
+
         }
+
+ 
 
         .roadmap-section ul {
+
             list-style: none;
+
         }
+
+ 
 
         .roadmap-section li {
+
             padding: 8px 0;
+
             padding-left: 25px;
+
             position: relative;
+
         }
+
+ 
 
         .roadmap-section li:before {
+
             content: "→";
+
             position: absolute;
+
             left: 0;
+
             color: #667eea;
+
             font-weight: bold;
+
         }
+
+ 
+
+        /* Gantt Chart Slide Styles */
+
+        .gantt-slide {
+
+            padding: 20px !important;
+
+            overflow: hidden;
+
+        }
+
+ 
+
+        .scroll-hint {
+
+            position: absolute;
+
+            bottom: 80px;
+
+            right: 30px;
+
+            background: rgba(102, 126, 234, 0.9);
+
+            color: white;
+
+            padding: 8px 16px;
+
+            border-radius: 20px;
+
+            font-size: 12px;
+
+            z-index: 1000;
+
+            animation: fadeInOut 3s ease-in-out infinite;
+
+        }
+
+ 
+
+        @keyframes fadeInOut {
+
+            0%, 100% { opacity: 0.7; }
+
+            50% { opacity: 1; }
+
+        }
+
+ 
+
+        .gantt-timeline-container {
+
+            background: #16213e;
+
+            border-radius: 12px;
+
+            padding: 15px;
+
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+
+            overflow-x: auto;
+
+            overflow-y: auto;
+
+            height: calc(100% - 80px);
+
+            position: relative;
+
+        }
+
+ 
+
+        .gantt-timeline-header {
+
+            display: grid;
+
+            grid-template-rows: auto auto auto;
+
+            background: #0f3460;
+
+            border-radius: 8px 8px 0 0;
+
+            margin-bottom: 8px;
+
+            position: sticky;
+
+            top: 0;
+
+            z-index: 1000;
+
+        }
+
+ 
+
+        .gantt-year-layer {
+
+            display: flex;
+
+            background: #0f3460;
+
+            border-bottom: 2px solid #e94560;
+
+        }
+
+ 
+
+        .gantt-year-section {
+
+            padding: 10px;
+
+            text-align: center;
+
+            font-weight: 700;
+
+            font-size: 14px;
+
+            letter-spacing: 2px;
+
+            color: #e94560;
+
+        }
+
+ 
+
+        .gantt-month-layer {
+
+            display: flex;
+
+            background: #16213e;
+
+            border-bottom: 1px solid #533483;
+
+        }
+
+ 
+
+        .gantt-month-section {
+
+            padding: 8px;
+
+            text-align: center;
+
+            font-weight: 500;
+
+            font-size: 11px;
+
+            color: #b794f6;
+
+            border-right: 1px solid #2d3561;
+
+        }
+
+ 
+
+        .gantt-week-layer {
+
+            display: flex;
+
+            background: #1a1a2e;
+
+        }
+
+ 
+
+        .gantt-week-section {
+
+            width: 25px;
+
+            padding: 4px 2px;
+
+            text-align: center;
+
+            font-size: 8px;
+
+            color: #718096;
+
+            border-right: 1px solid #2d3561;
+
+            position: relative;
+
+            writing-mode: vertical-lr;
+
+            text-orientation: mixed;
+
+        }
+
+ 
+
+        .gantt-tasks-container {
+
+            position: relative;
+
+            padding-left: 20px;
+
+        }
+
+ 
+
+        .gantt-task-group {
+
+            margin-bottom: 20px;
+
+        }
+
+ 
+
+        .gantt-group-header {
+
+            position: relative;
+
+            padding: 10px 0;
+
+            margin-bottom: 8px;
+
+        }
+
+ 
+
+        .gantt-group-title {
+
+            position: absolute;
+
+            left: -20px;
+
+            width: 200px;
+
+            font-weight: 600;
+
+            font-size: 13px;
+
+            padding: 8px 15px;
+
+            border-radius: 8px;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+        }
+
+ 
+
+        .gantt-group-title::before {
+
+            content: '';
+
+            width: 6px;
+
+            height: 6px;
+
+            border-radius: 50%;
+
+            background: currentColor;
+
+            box-shadow: 0 0 8px currentColor;
+
+        }
+
+ 
+
+        .gantt-task-item {
+
+            position: relative;
+
+            height: 35px;
+
+            margin-bottom: 6px;
+
+        }
+
+ 
+
+        .gantt-task-label {
+
+            display: none;
+
+        }
+
+ 
+
+        .gantt-task-timeline {
+
+            position: absolute;
+
+            left: 0;
+
+            right: 0;
+
+            height: 100%;
+
+            min-width: 1400px;
+
+        }
+
+ 
+
+        .gantt-task-bar {
+
+            position: absolute;
+
+            height: 24px;
+
+            top: 6px;
+
+            border-radius: 12px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            padding: 0 10px;
+
+            font-size: 9px;
+
+            font-weight: 600;
+
+            color: white;
+
+            transition: all 0.3s ease;
+
+            cursor: pointer;
+
+            overflow: hidden;
+
+            text-align: center;
+
+            white-space: nowrap;
+
+            text-overflow: ellipsis;
+
+        }
+
+ 
+
+ 
+
+        .gantt-task-bar:hover {
+
+            transform: translateY(-2px);
+
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+
+            z-index: 10;
+
+        }
+
+ 
+
+        .gantt-platform-bar {
+
+            height: 26px;
+
+            top: 5px;
+
+            font-weight: 600;
+
+            font-size: 10px;
+
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+
+        }
+
+ 
+
+        /* Platform colors for Gantt */
+
+        .gantt-taxi-group { color: #fc5c65; }
+
+        .gantt-taxi-bar {
+
+            background: linear-gradient(135deg, #fc5c65 0%, #eb3b5a 100%);
+
+            box-shadow: 0 4px 15px rgba(252, 92, 101, 0.3);
+
+        }
+
+ 
+
+        .gantt-gcp-group { color: #45aaf2; }
+
+        .gantt-gcp-bar {
+
+            background: linear-gradient(135deg, #45aaf2 0%, #2e86de 100%);
+
+            box-shadow: 0 4px 15px rgba(69, 170, 242, 0.3);
+
+        }
+
+ 
+
+        .gantt-azure-group { color: #4834d4; }
+
+        .gantt-azure-bar {
+
+            background: linear-gradient(135deg, #686de0 0%, #4834d4 100%);
+
+            box-shadow: 0 4px 15px rgba(104, 109, 224, 0.3);
+
+        }
+
+ 
+
+        .gantt-aws-group { color: #f7b731; }
+
+        .gantt-aws-bar {
+
+            background: linear-gradient(135deg, #f7b731 0%, #f39c12 100%);
+
+            box-shadow: 0 4px 15px rgba(247, 183, 49, 0.3);
+
+        }
+
+ 
+
+        .gantt-onprem-group { color: #a55eea; }
+
+        .gantt-onprem-bar {
+
+            background: linear-gradient(135deg, #a55eea 0%, #8854d0 100%);
+
+            box-shadow: 0 4px 15px rgba(165, 94, 234, 0.3);
+
+        }
+
+ 
+
+        .gantt-progress-line {
+
+            position: absolute;
+
+            width: 2px;
+
+            top: 0;
+
+            bottom: 0;
+
+            background: #e94560;
+
+            box-shadow: 0 0 15px rgba(233, 69, 96, 0.5);
+
+            z-index: 100;
+
+            pointer-events: none;
+
+        }
+
+ 
+
+        .gantt-progress-line::before {
+
+            content: 'TODAY';
+
+            position: absolute;
+
+            top: -25px;
+
+            left: 50%;
+
+            transform: translateX(-50%);
+
+            background: #e94560;
+
+            padding: 3px 8px;
+
+            border-radius: 8px;
+
+            font-size: 8px;
+
+            font-weight: 600;
+
+            letter-spacing: 1px;
+
+        }
+
+ 
+
+        .gantt-grid-overlay {
+
+            position: absolute;
+
+            top: 0;
+
+            left: 0;
+
+            right: 0;
+
+            bottom: 0;
+
+            pointer-events: none;
+
+        }
+
+ 
+
+        .gantt-grid-line {
+
+            position: absolute;
+
+            top: 0;
+
+            bottom: 0;
+
+            width: 1px;
+
+            background: rgba(45, 53, 97, 0.5);
+
+        }
+
+ 
+
+        .gantt-grid-line.month-marker {
+
+            background: rgba(83, 52, 131, 0.5);
+
+        }
+
     </style>
+
 </head>
+
 <body>
+
     <div class="presentation-container">
-        <div class="slide-number">Slide <span id="current-slide">1</span> of <span id="total-slides">12</span></div>
-        
+
+        <div class="slide-number">Slide <span id="current-slide">1</span> of <span id="total-slides">20</span></div>
+
+ 
+
         <!-- Slide 1: Title -->
+
         <div class="slide active title-slide">
+
             <h1>AI & Automation Transformation Journey</h1>
+
             <p>CVS Health Shared Services</p>
+
             <p>Cloud & On-Premise Infrastructure</p>
+
             <p>Dwayne Holmes & Claude AI </p>
+
             <p class="date">October 2024 - May 2025</p>
+
         </div>
+
+ 
 
         <!-- Slide 2: Executive Summary -->
+
         <div class="slide">
+
             <div class="slide-header">
+
                 <h2>Executive Summary</h2>
+
             </div>
+
             <div class="content">
+
                 <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 30px;">
+
                     <div class="card" style="border-color: #667eea;">
+
                         <h3 style="color: #667eea;">Challenge</h3>
+
                         <p style="font-size: 18px; line-height: 1.8;">Fragmented, manual infrastructure with organizational dysfunction, little automation, and siloed teams</p>
+
                     </div>
+
                     <div class="card" style="border-color: #667eea;">
+
                         <h3 style="color: #667eea;">Solution</h3>
+
                         <p style="font-size: 18px; line-height: 1.8;">Unified, automated platform with clear leadership, integrated teams, and foundations of end-to-end automation</p>
+
                     </div>
+
                     <div class="card" style="border-color: #667eea;">
+
                         <h3 style="color: #667eea;">Timeline</h3>
-                        <p style="font-size: 18px; line-height: 1.8;">9-month transformation journey from assessment to automation and platform strategy</p>
+
+                        <p style="font-size: 18px; line-height: 1.8;">9-month transformational journey from assessment to automation and platform strategy</p>
+
                     </div>
+
                     <div class="card" style="border-color: #667eea;">
+
                         <h3 style="color: #667eea;">Result</h3>
+
                         <p style="font-size: 18px; line-height: 1.8;">Seeds of end-to-end automation across cloud and on-premise with reductions in complexity</p>
+
                     </div>
+
                 </div>
+
             </div>
+
         </div>
+
+ 
 
         <!-- Slide 3: TAXI Architecture -->
+
         <div class="slide">
+
             <div class="slide-header">
+
                 <h2>TAXI Architecture - Building for the AI future</h2>
+
             </div>
+
             <div style="display: flex; justify-content: center; align-items: center; height: calc(100% - 120px);">
+
                 <img src="TAXI.jpeg" alt="TAXI Architecture Diagram" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+
             </div>
+
         </div>
+
+ 
 
         <!-- Slide 4: August-September 2024 -->
+
         <div class="slide">
+
             <div class="timeline-indicator">
+
                 <div class="timeline-dot active"></div>
+
                 <div class="timeline-dot"></div>
+
                 <div class="timeline-dot"></div>
+
                 <div class="timeline-dot"></div>
+
                 <div class="timeline-dot"></div>
+
             </div>
+
             <div class="slide-header">
+
                 <h2>August - September 2024: Initial State Assessment</h2>
+
             </div>
+
             <div class="two-column">
+
                 <div class="column problems">
+
                     <div class="column-header">🔴 Initial Observations</div>
+
                     <div class="card">
+
                         <h4 style="color: #e53e3e; font-weight: bold; margin-bottom: 10px;">Organizational Dysfunction</h4>
+
                         <ul>
+
                             <li>No daily engineering meetings or coordination</li>
+
                             <li>Engineering teams operating as <span class="highlight">Operations</span> (ticket-based)</li>
+
                             <li>Leadership vacuum and unclear ownership</li>
+
                         </ul>
+
                     </div>
+
                 </div>
+
                 <div class="column solutions">
+
                     <div class="column-header">🟢 Initial Actions</div>
+
                     <div class="card">
+
                         <h4 style="color: #48bb78; font-weight: bold; margin-bottom: 10px;">Leadership & Structure</h4>
+
                         <ul>
+
                             <li>Started journey at CVS Health</li>
+
                             <li>Began organizational assessment</li>
+
                             <li>Identified key platform gaps</li>
+
                         </ul>
+
                     </div>
+
                 </div>
+
             </div>
+
         </div>
 
-        <!-- Slide 4: October-November 2024 -->
+ 
+
+        <!-- Slide 5: October-November 2024 -->
+
         <div class="slide">
+
             <div class="timeline-indicator">
+
                 <div class="timeline-dot"></div>
+
                 <div class="timeline-dot active"></div>
+
                 <div class="timeline-dot"></div>
+
                 <div class="timeline-dot"></div>
+
                 <div class="timeline-dot"></div>
+
             </div>
+
             <div class="slide-header">
+
                 <h2>October - November 2024: Platform Fragmentation Crisis</h2>
+
             </div>
+
             <div class="two-column">
+
                 <div class="column problems">
+
                     <div class="column-header">🔴 Platform Fragmentation</div>
+
                     <div class="card">
+
                         <h4 style="color: #e53e3e; font-weight: bold; margin-bottom: 10px;">Critical Issues <span style="display: inline-block; background: #f7fafc; border: 1px solid #e2e8f0; color: #4a5568; padding: 4px 12px; border-radius: 12px; font-size: 12px; margin-left: 10px; font-weight: normal;">Critical Impact</span></h4>
+
                         <ul>
+
                             <li><span class="highlight">No end-to-end VM automation</span></li>
+
                             <li>Azure and GCP Automation teams in silos</li>
+
                             <li>Cloud OS agents failing due to network issues and lack of maintenance</li>
-                            <li>Windows and Red Hat Base images +6 months outdated</li>
-                            <li>No Red Hat 9 support</li>
-                            <li>Automated builds not fully functional in GCP due to Security policies</li>
+
+                            <li>Windows and Red Hat Base images outdated (+6 months)</li>
+
+                            <li>No Red Hat 9 base image or support</li>
+
+                            <li>Automated builds impossible in GCP due to Security change and policy</li>
+
                             <li>FinOps disconnected from automation</li>
+
                         </ul>
+
                     </div>
+
                 </div>
+
                 <div class="column solutions">
+
                     <div class="column-header">🟢 Foundation Building</div>
+
                     <div class="card">
+
                         <h4 style="color: #48bb78; font-weight: bold; margin-bottom: 10px;">Initial Solutions</h4>
+
                         <ul>
+
                             <li>Established <span class="highlight">daily engineering meetings</span></li>
+
                             <li>Began transition from support to engineering in Azure and GCP Cloud Teams</li>
+
                             <li>Defined clear roles and ownership</li>
-                            <li>Supported new daily <span class="highlight">Build Factory</span> in GCP</li>
+
+                            <li>Worked with Security to revert breaking policy changes and communicate with Automation teams</li>
+
+                            <li>Supported new daily <span class="highlight">Build Factory</span></li>
+
                         </ul>
+
                     </div>
+
                 </div>
+
             </div>
+
         </div>
 
-        <!-- Slide 5: December 2024 - January 2025 -->
+ 
+
+        <!-- Slide 6: December 2024 - January 2025 -->
+
         <div class="slide">
+
             <div class="timeline-indicator">
+
                 <div class="timeline-dot"></div>
+
                 <div class="timeline-dot"></div>
+
                 <div class="timeline-dot active"></div>
+
                 <div class="timeline-dot"></div>
+
                 <div class="timeline-dot"></div>
+
             </div>
+
             <div class="slide-header">
+
                 <h2>December 2024 - January 2025: Unification & Optimization</h2>
+
             </div>
+
             <div class="two-column">
+
                 <div class="column problems">
+
                     <div class="column-header">🔴 Access & Deployment Issues</div>
+
                     <div class="card">
+
                         <h4 style="color: #e53e3e; font-weight: bold; margin-bottom: 10px;">Blocking Problems</h4>
+
                         <ul>
+
                             <li>Teams couldn't access VMs they provisioned</li>
+
                             <li>CAP and SDE platform purpose misunderstood</li>
+
                             <li>Post-build processes taking <span class="highlight">hours</span></li>
-                            <li>No standardized Red Hat login</li>
+
+                            <li>No standardized Red Hat user login</li>
+
                             <li>Developers blocked from deploying apps via automation</li>
+
                         </ul>
+
                     </div>
+
                 </div>
+
                 <div class="column solutions">
+
                     <div class="column-header">🟢 Unification & Optimization</div>
+
                     <div class="card">
+
                         <h4 style="color: #48bb78; font-weight: bold; margin-bottom: 10px;">Major Progress <span style="display: inline-block; background: #f7fafc; border: 1px solid #e2e8f0; color: #4a5568; padding: 4px 12px; border-radius: 12px; font-size: 12px; margin-left: 10px; font-weight: normal;">Major Progress</span></h4>
+
                         <ul>
+
                             <li>Unified automation technical direction under single technical leader</li>
+
                             <li>Merged Azure/GCP automation teams organizationally</li>
+
                             <li>Reduced OS agents from <span class="highlight">23 to 8</span></li>
+
                             <li>Released automated Windows 2019/2022 and Red Hat 8/9 base images</li>
-                            <li>Established feedback loops via daily meetings</li>
+
+                            <li>Established feedback loops via daily meetings between Ops/Eng</li>
+
                             <li>Submitted over <span class="highlight">200</span> critical Azure/GCP firewall rules</li>
+
+                            <li>CAP defined as opinionated "serverless" developer platform and not web portal</li>
+
                         </ul>
+
                     </div>
+
                 </div>
+
             </div>
+
         </div>
 
-        <!-- Slide 6: February - March 2025 -->
+ 
+
+        <!-- Slide 7: February - March 2025 -->
+
         <div class="slide">
+
             <div class="timeline-indicator">
+
                 <div class="timeline-dot"></div>
+
                 <div class="timeline-dot"></div>
+
                 <div class="timeline-dot"></div>
+
                 <div class="timeline-dot active"></div>
+
                 <div class="timeline-dot"></div>
+
             </div>
+
             <div class="slide-header">
+
                 <h2>February - March 2025: Automation Breakthrough</h2>
+
             </div>
+
             <div class="two-column">
+
                 <div class="column problems">
+
                     <div class="column-header">🔴 Deployment Bottlenecks</div>
+
                     <div class="card">
+
                         <h4 style="color: #e53e3e; font-weight: bold; margin-bottom: 10px;">Remaining Issues</h4>
+
                         <ul>
+
                             <li>No OS image release notes</li>
+
                             <li>MSB/Qualys scans slowing every deployment</li>
+
                             <li>No automated app deployment using our automation to on-prem servers</li>
+
                             <li>Manual account provisioning</li>
+
                         </ul>
+
                     </div>
+
                 </div>
+
                 <div class="column solutions">
+
                     <div class="column-header">🟢 Automation Breakthrough</div>
+
                     <div class="card">
+
                         <h4 style="color: #48bb78; font-weight: bold; margin-bottom: 10px;">Game Changers</h4>
+
                         <ul>
+
                             <li>Implemented OS release notes</li>
+
                             <li>Moved post-build to Windows 2019/2022 and Red Hat 8 & 9 base images</li>
+
                             <li>Launched <span class="highlight">TAXI</span> (formerly Broccoli)</li>
-                            <li>First end-to-end automation: Apache & Tomcat via CP&T automation</li>
+
+                            <li>First end-to-end application automation: Apache & Tomcat via CP&T automation</li>
+
                             <li>Cloud-Init released for developer script deployments via automation</li>
-                            <li>FinOps CVSPark integration forces opt-out vs opt-in model</li>
-                            <li>First Create integration with ISTS Developer Portal and ServiceNow</li>
+
+                            <li>FinOps CVSPark integration moved from opt-in to opt-out in nonprod Azure</li>
+
+                            <li>First "Create" VM (CRUD) integration with ISTS Developer Portal and ServiceNow</li>
+
                         </ul>
+
                     </div>
+
                 </div>
+
             </div>
+
         </div>
 
-        <!-- Slide 7: April - May 2025 -->
+ 
+
+        <!-- Slide 8: April - May 2025 -->
+
         <div class="slide">
+
             <div class="timeline-indicator">
+
                 <div class="timeline-dot"></div>
+
                 <div class="timeline-dot"></div>
+
                 <div class="timeline-dot"></div>
+
                 <div class="timeline-dot"></div>
+
                 <div class="timeline-dot active"></div>
+
             </div>
+
             <div class="slide-header">
+
                 <h2>April - May 2025: Platform Maturity</h2>
+
             </div>
+
             <div class="two-column">
+
                 <div class="column problems">
+
                     <div class="column-header">🔴 Future Challenges</div>
+
                     <div class="card">
+
                         <h4 style="color: #667eea; font-weight: bold; margin-bottom: 10px;">Next Steps</h4>
+
                         <ul>
+
                             <li>Scaling automation across enterprise via TAXI</li>
-                            <li>Change culture to Automation Frameworks vs Team Silos</li>
+
+                                                    <li>Change culture from Team Silos to Automation Frameworks</li>
+
                             <li>Automation feature parity with customers</li>
-                            <li>AI integration to surpass customers</li>
+
+                            <li>AI integration to surpass customer capabilities</li>
+
                             <li><span class="highlight">Address serious platform issues with Azure, GCP, and Azure</span></li>
+
                             <li>Private Cloud 2.0</li>
+
                             <li>AWS greenfield deployment</li>
-                            <li>Update and Delete integration with ISTS Developer Portal and ServiceNow</li>
+
+                            <li>"Update" and "Delete" (CRUD SDLC) resource integration with ISTS Developer Portal and ServiceNow</li>
+
                             <li>Reimagine IAM and RBAC in the Cloud</li>
+
                             <li>Migrate to Cloud 2.0 framework in Azure and GCP</li>
+
                         </ul>
+
                     </div>
+
                 </div>
+
                 <div class="column solutions">
+
                     <div class="column-header">🟢 Platform Maturity</div>
+
                     <div class="card">
-                        <h4 style="color: #48bb78; font-weight: bold; margin-bottom: 10px;">Transformation Complete <span style="display: inline-block; background: #f7fafc; border: 1px solid #e2e8f0; color: #4a5568; padding: 4px 12px; border-radius: 12px; font-size: 12px; margin-left: 10px; font-weight: normal;">Transformation Complete</span></h4>
+
+                        <h4 style="color: #48bb78; font-weight: bold; margin-bottom: 10px;">Transformation Ongoing <span style="display: inline-block; background: #f7fafc; border: 1px solid #e2e8f0; color: #4a5568; padding: 4px 12px; border-radius: 12px; font-size: 12px; margin-left: 10px; font-weight: normal;">Transformation Ongoing</span></h4>
+
                         <ul>
-                            <li>Released Security API for Linux provisioning</li>
+
+                            <li>Released Security API for Linux user provisioning</li>
+
                             <li>Moved MSB/Qualys scans to weekly and monthly base image builds</li>
+
                             <li>TAXI API POC launched</li>
-                            <li>ServiceNow VM end-to-end automation</li>
-                            <li>GCP CloudSQL & MemStore automated</li>
-                            <li><span class="highlight">Fully automated</span> all base image builds w/ Security automation</li>
+
+                            <li>ServiceNow VM end-to-end automation released as POC</li>
+
+                            <li>GCP CloudSQL & MemStore automation released to customers</li>
+
+                            <li><span class="highlight">Automated</span> base image builds w/ new Security automation</li>
+
                             <li>Completed Intuitive Cloud SOW 1</li>
+
                             <li>Presented AI & Automation Roadmap</li>
+
                         </ul>
+
                     </div>
+
                 </div>
+
             </div>
+
         </div>
 
-        <!-- Slide 8: Key Achievements -->
+ 
+
+        <!-- Slide 9: Key Achievements -->
+
         <div class="slide achievement-slide">
+
             <h2>Key Achievements & Impact</h2>
+
             <div class="metrics-grid">
+
                 <div class="metric-card">
+
                     <div class="metric-value">65%</div>
+
                     <div class="metric-label">Reduction in OS Agents<br>(23 → 8)</div>
+
                 </div>
+
                 <div class="metric-card">
+
                     <div class="metric-value">100%</div>
+
                     <div class="metric-label">Automation of Base Image OS Creation<br>in GCP, Azure, On-Premise</div>
+
                 </div>
+
                 <div class="metric-card">
+
                     <div class="metric-value">Days → Hours</div>
+
                     <div class="metric-label">Build Time<br>Improvement</div>
+
                 </div>
+
                 <div class="metric-card">
+
                     <div class="metric-value">Unified Platform</div>
+
                     <div class="metric-label">From Siloed Teams<br>to Single Direction</div>
+
                 </div>
+
             </div>
+
             <p style="font-size: 24px; margin-top: 40px;">Transforming fragmented, manual infrastructure into unified, automated framework</p>
+
             <p style="font-size: 20px; margin-top: 20px; opacity: 0.9;">
+
                 "Platform problems cause daily automation failures - by fixing the foundation, we will enable automation"
+
             </p>
+
         </div>
 
-        <!-- Slide 9: Lessons Learned -->
+ 
+
+        <!-- Slide 10: Lessons Learned -->
+
         <div class="slide">
+
             <div class="slide-header">
+
                 <h2>Lessons Learned</h2>
+
             </div>
+
             <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 40px;">
+
                 <div>
+
                     <h3 style="color: #667eea; margin-bottom: 20px;">Success Factors</h3>
+
                     <div class="card" style="border-color: #667eea;">
+
                         <ul style="list-style: none;">
-                            <li style="padding: 10px 0;"><strong>Leadership:</strong> Unified technical direction</li>
-                            <li style="padding: 10px 0;"><strong>Communication:</strong> Daily engineering meetings</li>
-                            <li style="padding: 10px 0;"><strong>Integration:</strong> Breaking down team silos</li>
-                            <li style="padding: 10px 0;"><strong>Automation-First:</strong> Moving from operations to engineering</li>
-                            <li style="padding: 10px 0;"><strong>Foundation Focus:</strong> Fix platform before features</li>
+
+                            <li style="padding: 10px 0; position: relative; padding-left: 35px;"><span style="position: absolute; left: 0; color: #48bb78; font-size: 16px;">✓</span><strong>Leadership:</strong> Unified technical direction</li>
+
+                            <li style="padding: 10px 0; position: relative; padding-left: 35px;"><span style="position: absolute; left: 0; color: #48bb78; font-size: 16px;">✓</span><strong>Communication:</strong> Daily engineering meetings</li>
+
+                            <li style="padding: 10px 0; position: relative; padding-left: 35px;"><span style="position: absolute; left: 0; color: #48bb78; font-size: 16px;">✓</span><strong>Integration:</strong> Breaking down team silos</li>
+
+                            <li style="padding: 10px 0; position: relative; padding-left: 35px;"><span style="position: absolute; left: 0; color: #48bb78; font-size: 16px;">✓</span><strong>Automation-First:</strong> Moving from operations to engineering mindset</li>
+
+                            <li style="padding: 10px 0; position: relative; padding-left: 35px;"><span style="position: absolute; left: 0; color: #f39c12; font-size: 16px;">🔄</span><strong>Foundation Focus:</strong> Fix Automation Enablement (platform) before Automation features</li>
+
                         </ul>
+
                     </div>
+
                 </div>
+
                 <div>
+
                     <h3 style="color: #764ba2; margin-bottom: 20px;">Cultural Shift</h3>
+
                     <div class="card" style="border-color: #764ba2;">
+
                         <ul style="list-style: none;">
-                            <li style="padding: 10px 0;">From ticket-based operations to proactive engineering</li>
-                            <li style="padding: 10px 0;">From isolated teams to unified platform approach</li>
-                            <li style="padding: 10px 0;">From manual processes to automation-first mindset</li>
-                            <li style="padding: 10px 0;">From reactive support to strategic innovation</li>
+
+                            <li style="padding: 10px 0; position: relative; padding-left: 35px;"><span style="position: absolute; left: 0; color: #f39c12; font-size: 16px;">🔄</span>From ticket-based operations to proactive engineering</li>
+
+                            <li style="padding: 10px 0; position: relative; padding-left: 35px;"><span style="position: absolute; left: 0; color: #f39c12; font-size: 16px;">🔄</span>From isolated teams to unified platform approach</li>
+
+                            <li style="padding: 10px 0; position: relative; padding-left: 35px;"><span style="position: absolute; left: 0; color: #f39c12; font-size: 16px;">🔄</span>From manual processes to automation-first mindset</li>
+
+                            <li style="padding: 10px 0; position: relative; padding-left: 35px;"><span style="position: absolute; left: 0; color: #f39c12; font-size: 16px;">🔄</span>From reactive support to strategic innovation</li>
+
                         </ul>
+
                     </div>
+
                 </div>
+
             </div>
+
         </div>
 
-        <!-- Slide 10: Next Steps & Roadmap -->
+ 
+
+        <!-- Slide 11: Next Steps & Roadmap -->
+
         <div class="slide">
+
             <div class="slide-header">
+
                 <h2>Next Steps & Roadmap</h2>
+
             </div>
+
             <div class="roadmap-grid">
+
                 <div class="roadmap-section">
+
                     <h4>Immediate Priorities</h4>
+
                     <ul>
+
                         <li>Scale TAXI across enterprise</li>
+
                         <li>Start AWS greenfield deployment</li>
+
                         <li>Full ISTS Dev Portal integration (Create/Update/Delete)</li>
-                        <li>Public Cloud 2.0 migration</li>
-                        <li>Private Cloud 2.0 migration</li>
+
+                        <li>Public Cloud 2.0 automation and support</li>
+
+                        <li>Private Cloud 2.0 automation and support</li>
+
+                        <li>Improve Automation Enablement which paves the way for Automation</li>
+
                     </ul>
+
                 </div>
+
                 <div class="roadmap-section">
+
                     <h4>Long-term Vision</h4>
+
                     <ul>
-                        <li>AI-powered automation</li>
+
+                        <li>AI-powered automation & deployments</li>
+
                         <li>Self-service platform</li>
+
                         <li>Zero-touch provisioning</li>
-                        <li>AI powered deployments</li>
+
+                        <li>AI-powered feedback loop w/ predicative analytics</li>
+
                     </ul>
+
                 </div>
+
                 <div class="roadmap-section">
+
                     <h4>Technical Initiatives</h4>
+
                     <ul>
-                        <li>Reimagine IAM/RBAC in Cloud</li>
+
+                        <li>Reimagine IAM & RBAC in Cloud</li>
+
                         <li>Support ServiceNOW integration</li>
+
                         <li>Address technical debt</li>
+
                     </ul>
+
                 </div>
+
                 <div class="roadmap-section">
-                    <h4>Cultural Transformation: Progress over Perfection</h4>
+
+                    <h4>Cultural Transformation</h4>
+
                     <ul>
+
                         <li>Shift to framework thinking</li>
+
                         <li>Developer self-service adoption</li>
+
                         <li>Innovation over operations</li>
-                        <li>Continuous improvement mindset</li>
+
+                        <li>Progress over Perfection</li>
+
                     </ul>
+
                 </div>
+
             </div>
+
         </div>
 
-        <!-- Slide 11: Call to Action -->
-        <div class="slide title-slide">
-            <h2 style="font-size: 48px; margin-bottom: 40px;">Continue the Transformation</h2>
-            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 30px; max-width: 800px; margin: 0 auto;">
-                <div class="card" style="border-color: #667eea; text-align: left;">
-                    <h3 style="color: #667eea;">Adopt</h3>
-                    <p>TAXI for your automation needs</p>
-                </div>
-                <div class="card" style="border-color: #667eea; text-align: left;">
-                    <h3 style="color: #667eea;">Collaborate</h3>
-                    <p>Join daily engineering meetings</p>
-                </div>
-                <div class="card" style="border-color: #667eea; text-align: left;">
-                    <h3 style="color: #667eea;">Innovate</h3>
-                    <p>Contribute to platform evolution</p>
-                </div>
-                <div class="card" style="border-color: #667eea; text-align: left;">
-                    <h3 style="color: #667eea;">Transform</h3>
-                    <p>Move from operations to engineering</p>
-                </div>
+ 
+
+        <!-- Slide 12: Hub Architecture 1 -->
+
+        <div class="slide">
+
+            <div class="slide-header">
+
+                <h2>10 GCP Environments to Automate 1 of 2</h2>
+
             </div>
-            <p style="margin-top: 40px; font-size: 20px; color: #666;">Thank You</p>
+
+            <div style="display: flex; justify-content: center; align-items: center; height: calc(100% - 120px);">
+
+                <img src="Hub1.png" alt="GCP Hub 1" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+
+            </div>
+
         </div>
+
+ 
+
+        <!-- Slide 13: Hub Architecture 2 -->
+
+        <div class="slide">
+
+            <div class="slide-header">
+
+                <h2>10 GCP Environments to Automate 2 of 2</h2>
+
+            </div>
+
+            <div style="display: flex; justify-content: center; align-items: center; height: calc(100% - 120px);">
+
+                <img src="Hub2.png" alt="GCP Hub 2" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+
+            </div>
+
+        </div>
+
+ 
+
+        <!-- Slide 14: Project Timeline & Milestones -->
+
+        <div class="slide gantt-slide">
+
+            <div class="slide-header">
+
+                <h2>Automation Enablement: Project Timeline & Milestones</h2>
+
+            </div>
+
+            <div class="gantt-timeline-container">
+
+                <div class="gantt-timeline-header">
+
+                    <div class="gantt-year-layer">
+
+                        <div class="gantt-year-section" style="flex: 6;">2025</div>
+
+                        <div class="gantt-year-section" style="flex: 1;">2026</div>
+
+                    </div>
+
+                    <div class="gantt-month-layer" id="ganttMonthLayer"></div>
+
+                    <div class="gantt-week-layer" id="ganttWeekLayer"></div>
+
+                </div>
+
+ 
+
+                <div class="gantt-tasks-container" id="ganttTasksContainer">
+
+                    <div class="gantt-grid-overlay" id="ganttGridOverlay"></div>
+
+                    <div class="gantt-progress-line" id="ganttProgressLine"></div>
+
+                </div>
+
+ 
+
+                <div class="scroll-hint">Scroll down for more tasks ↓</div>
+
+            </div>
+
+        </div>
+
+ 
+
+        <!-- Slide 15: TAXI Platform SOW Summary -->
+
+        <div class="slide">
+
+            <div class="slide-content">
+
+                                    <h1 style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 2.5em; margin-bottom: 30px; text-align: center;">Automation<br>TAXI Platform – Execution & Outcomes</h1>
+
+ 
+
+                <div style="max-width: 1200px; margin: 0 auto;">
+
+                    <table style="width: 100%; border-collapse: collapse; background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.1);">
+
+                        <thead>
+
+                            <tr style="background: linear-gradient(135deg, #667eea, #764ba2); color: white;">
+
+                                <th style="padding: 20px; text-align: left; font-size: 1.1em; font-weight: 600;">SOW</th>
+
+                                <th style="padding: 20px; text-align: left; font-size: 1.1em; font-weight: 600;">Focus Area</th>
+
+                                <th style="padding: 20px; text-align: left; font-size: 1.1em; font-weight: 600;">Key Outcomes</th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            <tr style="border-bottom: 1px solid #e2e8f0;">
+
+                                <td style="padding: 15px; font-weight: 600; color: #667eea;">1. TAXI APIs</td>
+
+                                <td style="padding: 15px; color: #4a5568;">Unified API for infra lifecycle</td>
+
+                                <td style="padding: 15px; color: #4a5568;">Standardized infra management, secure APIs, CI/CD-ready</td>
+
+                            </tr>
+
+                            <tr style="border-bottom: 1px solid #e2e8f0; background: #f8fafc;">
+
+                                <td style="padding: 15px; font-weight: 600; color: #667eea;">2. Orchestration Engine</td>
+
+                                <td style="padding: 15px; color: #4a5568;">Temporal-based workflow automation</td>
+
+                                <td style="padding: 15px; color: #4a5568;">Durable, auditable workflows with real-time tracking</td>
+
+                            </tr>
+
+                            <tr style="border-bottom: 1px solid #e2e8f0;">
+
+                                <td style="padding: 15px; font-weight: 600; color: #667eea;">3. Agentic AI for IaC</td>
+
+                                <td style="padding: 15px; color: #4a5568;">AI-driven, policy-bound IaC generation</td>
+
+                                <td style="padding: 15px; color: #4a5568;">Secure, compliant code via chat, automated PRs, full traceability</td>
+
+                            </tr>
+
+                            <tr style="border-bottom: 1px solid #e2e8f0; background: #f8fafc;">
+
+                                <td style="padding: 15px; font-weight: 600; color: #667eea;">4. Module SDLC Framework</td>
+
+                                <td style="padding: 15px; color: #4a5568;">AI-accelerated module lifecycle</td>
+
+                                <td style="padding: 15px; color: #4a5568;">Reliable, reusable modules with CI/CD, testing, and support</td>
+
+                            </tr>
+
+                            <tr>
+
+                                <td style="padding: 15px; font-weight: 600; color: #667eea;">5–7. Cloud Modules</td>
+
+                                <td style="padding: 15px; color: #4a5568;">Production-grade tofu modules (GCP/Azure/AWS)</td>
+
+                                <td style="padding: 15px; color: #4a5568;">Secure, composable modules with docs, examples, and upgrade paths</td>
+
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+ 
+
+                    <div style="margin-top: 30px; padding: 25px; background: linear-gradient(135deg, #48bb78, #38a169); border-radius: 15px; text-align: center; color: white; box-shadow: 0 10px 25px rgba(72, 187, 120, 0.3);">
+
+                        <p style="font-size: 1.3em; font-weight: 600; margin: 0;">Execute these SOWs → Achieve a scalable, secure, AI-powered infrastructure platform with reusable, compliant IaC modules.</p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+ 
+
+        <!-- Slide 16: GCP Platform SOW Summary -->
+
+        <div class="slide">
+
+            <div class="slide-content">
+
+                                    <h1 style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 2.5em; margin-bottom: 30px; text-align: center;">Automation Enablement<br>GCP Platform – Execution & Outcomes</h1>
+
+ 
+
+                <div style="max-width: 1200px; margin: 0 auto;">
+
+                    <table style="width: 100%; border-collapse: collapse; background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.1);">
+
+                        <thead>
+
+                            <tr style="background: linear-gradient(135deg, #667eea, #764ba2); color: white;">
+
+                                <th style="padding: 20px; text-align: left; font-size: 1.1em; font-weight: 600;">SOW</th>
+
+                                <th style="padding: 20px; text-align: left; font-size: 1.1em; font-weight: 600;">Focus Area</th>
+
+                                <th style="padding: 20px; text-align: left; font-size: 1.1em; font-weight: 600;">Key Outcomes</th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            <tr style="border-bottom: 1px solid #e2e8f0;">
+
+                                <td style="padding: 15px; font-weight: 600; color: #667eea;">1. Architectural Governance</td>
+
+                                <td style="padding: 15px; color: #4a5568;">Governance framework & standards</td>
+
+                                <td style="padding: 15px; color: #4a5568;">Enterprise-wide governance, compliance, operational excellence</td>
+
+                            </tr>
+
+                            <tr style="border-bottom: 1px solid #e2e8f0; background: #f8fafc;">
+
+                                <td style="padding: 15px; font-weight: 600; color: #667eea;">2. Network Assessment</td>
+
+                                <td style="padding: 15px; color: #4a5568;">Network discovery & remediation</td>
+
+                                <td style="padding: 15px; color: #4a5568;">Optimized network architecture, security, performance</td>
+
+                            </tr>
+
+                            <tr style="border-bottom: 1px solid #e2e8f0;">
+
+                                <td style="padding: 15px; font-weight: 600; color: #667eea;">3. Network 2.0 Design</td>
+
+                                <td style="padding: 15px; color: #4a5568;">Secure Hub 2.0 implementation</td>
+
+                                <td style="padding: 15px; color: #4a5568;">Enhanced security, scalability, seamless transition</td>
+
+                            </tr>
+
+                            <tr style="border-bottom: 1px solid #e2e8f0; background: #f8fafc;">
+
+                                <td style="padding: 15px; font-weight: 600; color: #667eea;">4. Network Traceability</td>
+
+                                <td style="padding: 15px; color: #4a5568;">Connectivity testing & traceability</td>
+
+                                <td style="padding: 15px; color: #4a5568;">Comprehensive visibility, troubleshooting, automated analysis</td>
+
+                            </tr>
+
+                            <tr style="border-bottom: 1px solid #e2e8f0;">
+
+                                <td style="padding: 15px; font-weight: 600; color: #667eea;">5. VM & Cloud SQL Services</td>
+
+                                <td style="padding: 15px; color: #4a5568;">Deployable architecture for services</td>
+
+                                <td style="padding: 15px; color: #4a5568;">Standardized, secure, automated VM & SQL deployments</td>
+
+                            </tr>
+
+                            <tr style="border-bottom: 1px solid #e2e8f0; background: #f8fafc;">
+
+                                <td style="padding: 15px; font-weight: 600; color: #667eea;">6. GKE Services</td>
+
+                                <td style="padding: 15px; color: #4a5568;">Kubernetes deployment patterns</td>
+
+                                <td style="padding: 15px; color: #4a5568;">Secure, automated GKE cluster provisioning</td>
+
+                            </tr>
+
+                            <tr style="border-bottom: 1px solid #e2e8f0;">
+
+                                <td style="padding: 15px; font-weight: 600; color: #667eea;">7. Storage Services</td>
+
+                                <td style="padding: 15px; color: #4a5568;">Storage architecture & automation</td>
+
+                                <td style="padding: 15px; color: #4a5568;">Standardized, secure, automated storage solutions</td>
+
+                            </tr>
+
+                            <tr>
+
+                                <td style="padding: 15px; font-weight: 600; color: #667eea;">8. Security Assessment</td>
+
+                                <td style="padding: 15px; color: #4a5568;">Security architecture & governance</td>
+
+                                <td style="padding: 15px; color: #4a5568;">Robust security, compliance, risk management</td>
+
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+ 
+
+                    <div style="margin-top: 30px; padding: 25px; background: linear-gradient(135deg, #48bb78, #38a169); border-radius: 15px; text-align: center; color: white; box-shadow: 0 10px 25px rgba(72, 187, 120, 0.3);">
+
+                                                    <p style="font-size: 1.3em; font-weight: 600; margin: 0;">Execute these SOWs → Achieve a scalable and secure way to deploy VMs, Storage, CloudSQL, GKE in 10 hubs in a secure and scalable fashion</p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+ 
+
+        <!-- Slide 17: Azure Platform SOW Summary -->
+
+        <div class="slide">
+
+            <div class="slide-content">
+
+                                    <h1 style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 2.5em; margin-bottom: 30px; text-align: center;">Automation Enablement<br>Azure Platform – Execution & Outcomes</h1>
+
+ 
+
+                <div style="max-width: 1200px; margin: 0 auto;">
+
+                    <table style="width: 100%; border-collapse: collapse; background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.1);">
+
+                        <thead>
+
+                            <tr style="background: linear-gradient(135deg, #667eea, #764ba2); color: white;">
+
+                                <th style="padding: 20px; text-align: left; font-size: 1.1em; font-weight: 600;">SOW</th>
+
+                                <th style="padding: 20px; text-align: left; font-size: 1.1em; font-weight: 600;">Focus Area</th>
+
+                                <th style="padding: 20px; text-align: left; font-size: 1.1em; font-weight: 600;">Key Outcomes</th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            <tr style="border-bottom: 1px solid #e2e8f0;">
+
+                                <td style="padding: 15px; font-weight: 600; color: #667eea;">1</td>
+
+                                <td style="padding: 15px; color: #4a5568;">Architectural Governance & Standards</td>
+
+                                <td style="padding: 15px; color: #4a5568;">Unified governance framework and architectural standards across Azure</td>
+
+                            </tr>
+
+                            <tr style="border-bottom: 1px solid #e2e8f0; background: #f8fafc;">
+
+                                <td style="padding: 15px; font-weight: 600; color: #667eea;">2</td>
+
+                                <td style="padding: 15px; color: #4a5568;">Network Assessment & Remediation</td>
+
+                                <td style="padding: 15px; color: #4a5568;">Optimized Azure network with improved security, routing, and performance</td>
+
+                            </tr>
+
+                            <tr style="border-bottom: 1px solid #e2e8f0;">
+
+                                <td style="padding: 15px; font-weight: 600; color: #667eea;">3</td>
+
+                                <td style="padding: 15px; color: #4a5568;">Network 2.0 Design & Implementation</td>
+
+                                <td style="padding: 15px; color: #4a5568;">Secure Hub 2.0 design validated and implemented with scalable, secure architecture</td>
+
+                            </tr>
+
+                            <tr style="border-bottom: 1px solid #e2e8f0; background: #f8fafc;">
+
+                                <td style="padding: 15px; font-weight: 600; color: #667eea;">4</td>
+
+                                <td style="padding: 15px; color: #4a5568;">Deployable Architecture (VM & SQL)</td>
+
+                                <td style="padding: 15px; color: #4a5568;">Standardized, automated VM and SQL deployments with security and compliance</td>
+
+                            </tr>
+
+                            <tr style="border-bottom: 1px solid #e2e8f0;">
+
+                                <td style="padding: 15px; font-weight: 600; color: #667eea;">5</td>
+
+                                <td style="padding: 15px; color: #4a5568;">Deployable Architecture (AKS)</td>
+
+                                <td style="padding: 15px; color: #4a5568;">Secure, scalable Kubernetes deployments with automation and governance</td>
+
+                            </tr>
+
+                            <tr style="border-bottom: 1px solid #e2e8f0; background: #f8fafc;">
+
+                                <td style="padding: 15px; font-weight: 600; color: #667eea;">6</td>
+
+                                <td style="padding: 15px; color: #4a5568;">Deployable Architecture (Storage)</td>
+
+                                <td style="padding: 15px; color: #4a5568;">Standardized storage patterns with lifecycle, compliance, and automation</td>
+
+                            </tr>
+
+                            <tr>
+
+                                <td style="padding: 15px; font-weight: 600; color: #667eea;">7</td>
+
+                                <td style="padding: 15px; color: #4a5568;">Security Assessment & Remediation</td>
+
+                                <td style="padding: 15px; color: #4a5568;">Enterprise-grade Azure security architecture with Zero Trust and CI/CD integration</td>
+
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+ 
+
+                    <div style="margin-top: 30px; padding: 25px; background: linear-gradient(135deg, #48bb78, #38a169); border-radius: 15px; text-align: center; color: white; box-shadow: 0 10px 25px rgba(72, 187, 120, 0.3);">
+
+                        <p style="font-size: 1.3em; font-weight: 600; margin: 0;">Execute these SOWs → Achieve a secure, scalable, and compliant Azure platform with standardized, automated infrastructure that allows deployment of SQL, VMs, and Storage in 100% of the environment vs 50% today.</p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+ 
+
+        <!-- Slide 18: On-Prem Platform SOW Summary -->
+
+        <div class="slide">
+
+            <div class="slide-content">
+
+                                    <h1 style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 2.5em; margin-bottom: 30px; text-align: center;">Automation Enablement<br>On-Prem Platform – Execution & Outcomes</h1>
+
+ 
+
+                <div style="max-width: 1200px; margin: 0 auto;">
+
+                    <table style="width: 100%; border-collapse: collapse; background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.1);">
+
+                        <thead>
+
+                            <tr style="background: linear-gradient(135deg, #667eea, #764ba2); color: white;">
+
+                                <th style="padding: 20px; text-align: left; font-size: 1.1em; font-weight: 600;">SOW</th>
+
+                                <th style="padding: 20px; text-align: left; font-size: 1.1em; font-weight: 600;">Focus Area</th>
+
+                                <th style="padding: 20px; text-align: left; font-size: 1.1em; font-weight: 600;">Key Outcomes</th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            <tr style="border-bottom: 1px solid #e2e8f0;">
+
+                                <td style="padding: 15px; font-weight: 600; color: #667eea;">1</td>
+
+                                <td style="padding: 15px; color: #4a5568;">Network Design for Private Cloud 2.0</td>
+
+                                <td style="padding: 15px; color: #4a5568;">Future-ready network architecture with segmentation, multitenancy, and hybrid connectivity</td>
+
+                            </tr>
+
+                            <tr style="border-bottom: 1px solid #e2e8f0; background: #f8fafc;">
+
+                                <td style="padding: 15px; font-weight: 600; color: #667eea;">2</td>
+
+                                <td style="padding: 15px; color: #4a5568;">Network Automation Implementation</td>
+
+                                <td style="padding: 15px; color: #4a5568;">Scalable automation framework with scripts, workflows, and operational enablement</td>
+
+                            </tr>
+
+                            <tr style="border-bottom: 1px solid #e2e8f0;">
+
+                                <td style="padding: 15px; font-weight: 600; color: #667eea;">3</td>
+
+                                <td style="padding: 15px; color: #4a5568;">VMware Infrastructure Assessment</td>
+
+                                <td style="padding: 15px; color: #4a5568;">Clear migration roadmap with dependency mapping and risk analysis</td>
+
+                            </tr>
+
+                            <tr style="border-bottom: 1px solid #e2e8f0; background: #f8fafc;">
+
+                                <td style="padding: 15px; font-weight: 600; color: #667eea;">4</td>
+
+                                <td style="padding: 15px; color: #4a5568;">RHOSV Design & Deployment</td>
+
+                                <td style="padding: 15px; color: #4a5568;">Production-ready OpenShift Virtualization clusters with integrated monitoring and services</td>
+
+                            </tr>
+
+                            <tr>
+
+                                <td style="padding: 15px; font-weight: 600; color: #667eea;">5</td>
+
+                                <td style="padding: 15px; color: #4a5568;">Workload Migration to RHOSV</td>
+
+                                <td style="padding: 15px; color: #4a5568;">Seamless migration from VMware to RHOSV with validation and decommissioning</td>
+
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+ 
+
+                    <div style="margin-top: 30px; padding: 25px; background: linear-gradient(135deg, #48bb78, #38a169); border-radius: 15px; text-align: center; color: white; box-shadow: 0 10px 25px rgba(72, 187, 120, 0.3);">
+
+                        <p style="font-size: 1.3em; font-weight: 600; margin: 0;">Execute these SOWs → Achieve an automated, and production-grade on-prem cloud platform with OpenShift Virtualization.</p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+ 
+
+        <!-- Slide 19: AWS Platform SOW Summary -->
+
+        <div class="slide">
+
+            <div class="slide-content">
+
+                <h1 style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 2.5em; margin-bottom: 30px; text-align: center;">Automation Enablement<br>AWS Platform – Execution & Outcomes</h1>
+
+ 
+
+                <div style="max-width: 1200px; margin: 0 auto;">
+
+                    <table style="width: 100%; border-collapse: collapse; background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.1);">
+
+                        <thead>
+
+                            <tr style="background: linear-gradient(135deg, #667eea, #764ba2); color: white;">
+
+                                <th style="padding: 20px; text-align: left; font-size: 1.1em; font-weight: 600;">SOW</th>
+
+                                <th style="padding: 20px; text-align: left; font-size: 1.1em; font-weight: 600;">Focus Area</th>
+
+                                <th style="padding: 20px; text-align: left; font-size: 1.1em; font-weight: 600;">Key Outcomes</th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            <tr style="border-bottom: 1px solid #e2e8f0;">
+
+                                <td style="padding: 15px; font-weight: 600; color: #667eea;">1</td>
+
+                                <td style="padding: 15px; color: #4a5568;">Landing Zone Assessment</td>
+
+                                <td style="padding: 15px; color: #4a5568;">Clear understanding of current AWS setup, gaps, and best-practice-aligned recommendations</td>
+
+                            </tr>
+
+                            <tr style="border-bottom: 1px solid #e2e8f0; background: #f8fafc;">
+
+                                <td style="padding: 15px; font-weight: 600; color: #667eea;">2</td>
+
+                                <td style="padding: 15px; color: #4a5568;">Landing Zone Design & Implementation</td>
+
+                                <td style="padding: 15px; color: #4a5568;">Secure, scalable, and compliant AWS foundation with centralized governance</td>
+
+                            </tr>
+
+                            <tr style="border-bottom: 1px solid #e2e8f0;">
+
+                                <td style="padding: 15px; font-weight: 600; color: #667eea;">3</td>
+
+                                <td style="padding: 15px; color: #4a5568;">Deployable Architecture (EC2 & RDS)</td>
+
+                                <td style="padding: 15px; color: #4a5568;">Standardized, automated EC2/RDS deployments with improved security and agility</td>
+
+                            </tr>
+
+                            <tr style="border-bottom: 1px solid #e2e8f0; background: #f8fafc;">
+
+                                <td style="padding: 15px; font-weight: 600; color: #667eea;">4</td>
+
+                                <td style="padding: 15px; color: #4a5568;">Deployable Architecture (Storage)</td>
+
+                                <td style="padding: 15px; color: #4a5568;">Secure, compliant storage patterns with automation and lifecycle management</td>
+
+                            </tr>
+
+                            <tr>
+
+                                <td style="padding: 15px; font-weight: 600; color: #667eea;">5</td>
+
+                                <td style="padding: 15px; color: #4a5568;">Deployable Architecture (EKS)</td>
+
+                                <td style="padding: 15px; color: #4a5568;">Scalable, secure EKS clusters with automation, observability, and governance</td>
+
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+ 
+
+                    <div style="margin-top: 30px; padding: 25px; background: linear-gradient(135deg, #48bb78, #38a169); border-radius: 15px; text-align: center; color: white; box-shadow: 0 10px 25px rgba(72, 187, 120, 0.3);">
+
+                                                    <p style="font-size: 1.3em; font-weight: 600; margin: 0;">Execute these SOWs → Achieve a secure, scalable, and standardized way to deploy VMs, Storage, AKS, and SQL in AWS</p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+ 
+
+        <!-- Slide 20: Call to Action -->
+
+        <div class="slide title-slide">
+
+            <h2 style="font-size: 48px; margin-bottom: 40px;">Continue the Transformation</h2>
+
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 30px; max-width: 800px; margin: 0 auto;">
+
+                <div class="card" style="border-color: #667eea; text-align: left;">
+
+                    <h3 style="color: #667eea;">Adopt</h3>
+
+                    <p>TAXI for your automation needs</p>
+
+                </div>
+
+                <div class="card" style="border-color: #667eea; text-align: left;">
+
+                    <h3 style="color: #667eea;">Collaborate</h3>
+
+                    <p>Join daily engineering meetings</p>
+
+                </div>
+
+                <div class="card" style="border-color: #667eea; text-align: left;">
+
+                    <h3 style="color: #667eea;">Innovate</h3>
+
+                    <p>Contribute to platform evolution</p>
+
+                </div>
+
+                <div class="card" style="border-color: #667eea; text-align: left;">
+
+                    <h3 style="color: #667eea;">Transform</h3>
+
+                    <p>Move from operations to engineering</p>
+
+                </div>
+
+            </div>
+
+            <p style="margin-top: 40px; font-size: 20px; color: #666;">Thank You</p>
+
+        </div>
+
+ 
 
         <!-- Navigation Controls -->
+
         <div class="controls">
+
             <button class="btn" id="prev-btn" onclick="changeSlide(-1)">← Previous</button>
+
             <button class="btn" id="next-btn" onclick="changeSlide(1)">Next →</button>
+
         </div>
+
     </div>
 
+ 
+
     <script>
+
         let currentSlide = 1;
-        const totalSlides = 12;
+
+        const totalSlides = 20;
+
+ 
 
         function showSlide(n) {
+
             const slides = document.getElementsByClassName('slide');
-            
+
+ 
+
             if (n > totalSlides) currentSlide = 1;
+
             if (n < 1) currentSlide = totalSlides;
-            
+
+ 
+
             for (let i = 0; i < slides.length; i++) {
+
                 slides[i].classList.remove('active');
+
             }
-            
+
+ 
+
             slides[currentSlide - 1].classList.add('active');
-            
+
+ 
+
             // Update slide number
+
             document.getElementById('current-slide').textContent = currentSlide;
-            
+
+ 
+
             // Update button states
+
             document.getElementById('prev-btn').disabled = currentSlide === 1;
+
             document.getElementById('next-btn').disabled = currentSlide === totalSlides;
+
         }
+
+ 
 
         function changeSlide(n) {
+
             currentSlide += n;
+
             showSlide(currentSlide);
+
         }
 
+ 
+
         // Keyboard navigation
+
         document.addEventListener('keydown', function(event) {
+
             if (event.key === 'ArrowLeft') changeSlide(-1);
+
             if (event.key === 'ArrowRight') changeSlide(1);
+
         });
 
+ 
+
         // Initialize
+
         showSlide(currentSlide);
+
+ 
+
+        // Gantt Chart Initialization
+
+        function initializeGanttChart() {
+
+            const projectData = [
+
+                { task: "TAXI Platform", start: "7/1/25", duration: 184, isHeader: true, group: "TAXI" },
+
+                { task: "S1.1: TAXI APIs", start: "7/1/25", duration: 132, group: "TAXI" },
+
+                { task: "S1.2: TAXI Orchestration Engine", start: "7/1/25", duration: 132, group: "TAXI" },
+
+                { task: "S1.3: Agentic AI For IaC Generation", start: "9/1/25", duration: 132, group: "TAXI" },
+
+                { task: "S1.4: AI Driven Module SDLC", start: "10/1/25", duration: 40, group: "TAXI" },
+
+                { task: "S1.5: GCP Module Development", start: "11/3/25", duration: 87, group: "TAXI" },
+
+                { task: "S1.6: AWS Module Development", start: "11/3/25", duration: 87, group: "TAXI" },
+
+                { task: "S1.7: Azure Module Development", start: "11/3/25", duration: 87, group: "TAXI" },
+
+ 
+
+                { task: "Platform GCP", start: "7/1/25", duration: 184, isHeader: true, group: "GCP" },
+
+                { task: "S2.1: Architectural Governance", start: "7/1/25", duration: 54, group: "GCP" },
+
+                { task: "S2.2: Network Assessment", start: "8/1/25", duration: 124, group: "GCP" },
+
+                { task: "S2.3: Network 2.0 Design", start: "7/1/25", duration: 184, group: "GCP" },
+
+                { task: "S2.4: Security Assessment", start: "7/1/25", duration: 30, group: "GCP" },
+
+                { task: "S2.5: Deployable Arch (VM/SQL)", start: "8/1/25", duration: 76, group: "GCP" },
+
+                { task: "S2.6: Deployable Arch (GKE)", start: "8/1/25", duration: 66, group: "GCP" },
+
+                { task: "S2.7: Deployable Arch (Storage)", start: "8/15/25", duration: 5, group: "GCP" },
+
+                { task: "S2.8: Network Traceability", start: "7/1/25", duration: 149, group: "GCP" },
+
+ 
+
+                { task: "Platform Azure", start: "7/1/25", duration: 143, isHeader: true, group: "Azure" },
+
+                { task: "S3.1: Architectural Governance", start: "7/1/25", duration: 54, group: "Azure" },
+
+                { task: "S3.2: Network Assessment", start: "7/1/25", duration: 124, group: "Azure" },
+
+                { task: "S3.3: Network 2.0 Design", start: "8/1/25", duration: 120, group: "Azure" },
+
+                { task: "S3.4: Security Assessment", start: "7/1/25", duration: 30, group: "Azure" },
+
+                { task: "S3.5: Deployable Arch (VM/SQL)", start: "7/1/25", duration: 76, group: "Azure" },
+
+                { task: "S3.6: Deployable Arch (AKS)", start: "9/1/25", duration: 66, group: "Azure" },
+
+                { task: "S3.7: Deployable Arch (Storage)", start: "9/1/25", duration: 5, group: "Azure" },
+
+ 
+
+                { task: "Platform AWS", start: "7/1/25", duration: 84, isHeader: true, group: "AWS" },
+
+                { task: "S4.1: Architectural Governance", start: "7/1/25", duration: 54, group: "AWS" },
+
+                { task: "S4.2: Assessment & Discovery", start: "9/15/25", duration: 30, group: "AWS" },
+
+ 
+
+                { task: "Platform On-Prem", start: "7/1/25", duration: 74, isHeader: true, group: "OnPrem" },
+
+                { task: "S5.1: RedHat Virtualization", start: "7/1/25", duration: 30, group: "OnPrem" },
+
+                { task: "S5.2: VM Provisioning Arch", start: "8/1/25", duration: 30, group: "OnPrem" },
+
+                { task: "S5.3: OCP Provisioning Arch", start: "8/1/25", duration: 30, group: "OnPrem" },
+
+                { task: "S5.4: OCP Automation", start: "9/1/25", duration: 30, group: "OnPrem" }
+
+            ];
+
+ 
+
+            function parseDate(dateStr) {
+
+                const [month, day, year] = dateStr.split('/');
+
+                const fullYear = parseInt(year) < 50 ? 2000 + parseInt(year) : 1900 + parseInt(year);
+
+                return new Date(fullYear, parseInt(month) - 1, parseInt(day));
+
+            }
+
+ 
+
+            const startDate = new Date(2025, 6, 1); // July 1, 2025
+
+            const endDate = new Date(2026, 3, 15); // February 15, 2026
+
+ 
+
+            // Generate months
+
+            const monthLayer = document.getElementById('ganttMonthLayer');
+
+            const monthsConfig = [
+
+                { name: 'JULY', days: 31 },
+
+                { name: 'AUGUST', days: 31 },
+
+                { name: 'SEPTEMBER', days: 30 },
+
+                { name: 'OCTOBER', days: 31 },
+
+                { name: 'NOVEMBER', days: 30 },
+
+                { name: 'DECEMBER', days: 31 },
+
+                { name: 'JANUARY', days: 31 },
+
+                { name: 'FEBRUARY', days: 28 },
+
+                { name: 'MARCH', days: 31 }
+
+            ];
+
+ 
+
+            if (monthLayer) {
+
+                monthsConfig.forEach(month => {
+
+                    const monthSection = document.createElement('div');
+
+                    monthSection.className = 'gantt-month-section';
+
+                    monthSection.textContent = month.name;
+
+                    monthSection.style.width = (month.days / 7 * 25) + 'px';
+
+                    monthLayer.appendChild(monthSection);
+
+                });
+
+            }
+
+ 
+
+            // Generate weeks
+
+            const weekLayer = document.getElementById('ganttWeekLayer');
+
+            let weekCount = 0;
+
+            let currentDate = new Date(startDate);
+
+ 
+
+            // Helper function to get Monday of the week
+
+            function getMondayOfWeek(date) {
+
+                const day = date.getDay();
+
+                const diff = date.getDate() - day + (day === 0 ? -6 : 1); // adjust when day is Sunday
+
+                return new Date(date.setDate(diff));
+
+            }
+
+ 
+
+            if (weekLayer) {
+
+                while (currentDate < endDate) {
+
+                    const weekSection = document.createElement('div');
+
+                    weekSection.className = 'gantt-week-section';
+
+ 
+
+                    // Get Monday of current week
+
+                    const monday = getMondayOfWeek(new Date(currentDate));
+
+                    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+                    const dayOfMonth = monday.getDate();
+
+                    const monthName = monthNames[monday.getMonth()];
+
+ 
+
+                    weekSection.textContent = `${monthName} ${dayOfMonth}`;
+
+                    weekLayer.appendChild(weekSection);
+
+ 
+
+                    currentDate.setDate(currentDate.getDate() + 7);
+
+                    weekCount++;
+
+                }
+
+            }
+
+ 
+
+            // Add grid overlay
+
+            const gridOverlay = document.getElementById('ganttGridOverlay');
+
+            if (gridOverlay) {
+
+                for (let i = 0; i <= weekCount; i++) {
+
+                    const gridLine = document.createElement('div');
+
+                    gridLine.className = 'gantt-grid-line';
+
+                    if (i % 4 === 0 && i > 0) {
+
+                        gridLine.classList.add('month-marker');
+
+                    }
+
+                    gridLine.style.left = (i * 25) + 'px';
+
+                    gridOverlay.appendChild(gridLine);
+
+                }
+
+            }
+
+ 
+
+            // Group tasks by platform
+
+            const groupedTasks = {};
+
+            projectData.forEach(task => {
+
+                if (!groupedTasks[task.group]) {
+
+                    groupedTasks[task.group] = [];
+
+                }
+
+                groupedTasks[task.group].push(task);
+
+            });
+
+ 
+
+            // Render tasks by group
+
+            const tasksContainer = document.getElementById('ganttTasksContainer');
+
+ 
+
+            if (tasksContainer) {
+
+                Object.entries(groupedTasks).forEach(([group, tasks]) => {
+
+                    const taskGroup = document.createElement('div');
+
+                    taskGroup.className = 'gantt-task-group';
+
+ 
+
+                    tasks.forEach((task, index) => {
+
+                        if (task.isHeader) {
+
+                            const groupHeader = document.createElement('div');
+
+                            groupHeader.className = 'gantt-group-header';
+
+ 
+
+                            const groupTitle = document.createElement('div');
+
+                            groupTitle.className = `gantt-group-title gantt-${group.toLowerCase()}-group`;
+
+                            groupTitle.textContent = task.task;
+
+ 
+
+                            groupHeader.appendChild(groupTitle);
+
+                            taskGroup.appendChild(groupHeader);
+
+                        } else {
+
+                            const taskItem = document.createElement('div');
+
+                            taskItem.className = 'gantt-task-item';
+
+ 
+
+                            const taskLabel = document.createElement('div');
+
+                            taskLabel.className = 'gantt-task-label';
+
+                            taskLabel.textContent = task.task;
+
+ 
+
+                            const taskTimeline = document.createElement('div');
+
+                            taskTimeline.className = 'gantt-task-timeline';
+
+ 
+
+                            // Calculate position
+
+                            const taskStart = parseDate(task.start);
+
+                            const daysSinceStart = Math.floor((taskStart - startDate) / (24 * 60 * 60 * 1000));
+
+ 
+
+                            const taskBar = document.createElement('div');
+
+                            taskBar.className = `gantt-task-bar gantt-${group.toLowerCase()}-bar`;
+
+                            const barWidth = (task.duration / 7 * 25);
+
+                            taskBar.style.left = Math.max(0, (daysSinceStart / 7 * 25)) + 'px';
+
+                            taskBar.style.width = barWidth + 'px';
+
+ 
+
+                            // For short tasks (less than 100px), place text outside the bar
+
+                            if (barWidth < 120) {
+
+                                taskBar.textContent = '';
+
+ 
+
+                                // Create external label
+
+                                const externalLabel = document.createElement('div');
+
+                                externalLabel.style.position = 'absolute';
+
+                                externalLabel.style.left = Math.max(0, (daysSinceStart / 7 * 25) + barWidth + 10) + 'px';
+
+                                externalLabel.style.top = '6px';
+
+                                externalLabel.style.height = '24px';
+
+                                externalLabel.style.display = 'flex';
+
+                                externalLabel.style.alignItems = 'center';
+
+                                externalLabel.style.fontSize = '9px';
+
+                                externalLabel.style.fontWeight = '600';
+
+                                externalLabel.style.color = 'white';
+
+                                externalLabel.style.whiteSpace = 'nowrap';
+
+                                externalLabel.textContent = task.task;
+
+ 
+
+                                taskTimeline.appendChild(externalLabel);
+
+                            } else {
+
+                                taskBar.textContent = task.task;
+
+                            }
+
+ 
+
+                            taskTimeline.appendChild(taskBar);
+
+ 
+
+                            taskItem.appendChild(taskLabel);
+
+                            taskItem.appendChild(taskTimeline);
+
+                            taskGroup.appendChild(taskItem);
+
+                        }
+
+                    });
+
+ 
+
+                    tasksContainer.appendChild(taskGroup);
+
+                });
+
+            }
+
+ 
+
+            // Position the progress line (current date indicator)
+
+            const today = new Date(2025, 6, 1); // For demo, using project start date
+
+            const daysSinceStart = Math.floor((today - startDate) / (24 * 60 * 60 * 1000));
+
+            const progressLine = document.getElementById('ganttProgressLine');
+
+            if (progressLine) {
+
+                progressLine.style.left = (daysSinceStart / 7 * 25) + 'px';
+
+            }
+
+        }
+
+ 
+
+        // Initialize Gantt chart when slide is shown
+
+        const originalShowSlide = showSlide;
+
+        showSlide = function(n) {
+
+            originalShowSlide(n);
+
+            // Initialize Gantt chart when showing slide 14
+
+            if (currentSlide === 14) {
+
+                setTimeout(initializeGanttChart, 100);
+
+            }
+
+        };
+
     </script>
+
 </body>
+
 </html>
